@@ -48,7 +48,6 @@ export class CandidatesController {
       console.log('Form data:', formData);
       console.log('Excel data:', excelData);
 
-      // Asegúrate de que los datos del Excel sean válidos
       if (
         !excelData ||
         !excelData.seniority ||
@@ -61,7 +60,6 @@ export class CandidatesController {
         );
       }
 
-      // Llamar al método create del servicio con los dos parámetros
       return this.candidatesService.create(formData, excelData);
     } catch (e) {
       console.error('Error in controller:', e);
