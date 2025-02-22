@@ -38,13 +38,12 @@ export class CandidatesService {
         combinedData,
       );
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       const errors = await validate(combinedDataDto);
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (errors.length > 0) {
         console.log('Validation errors:', errors);
         throw new HttpException(
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           `Error de validación: ${errors}`,
           HttpStatus.BAD_REQUEST,
         );
@@ -71,6 +70,60 @@ export class CandidatesService {
       throw new HttpException(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         `Error al obtener los candidatos: ${e.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async remove(id: number): Promise<void> {
+    try {
+      const result = await this.candidatesRepository.delete(id);
+      if (result.affected === 0) {
+        throw new HttpException(
+          'Candidato no encontrado',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+    } catch (e) {
+      console.error('Error in remove:', e);
+      throw new HttpException(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        `Error al eliminar el candidato: ${e.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async update(
+    id: number,
+    candidateData: Partial<Candidate>,
+  ): Promise<Candidate> {
+    try {
+      const candidate = await this.candidatesRepository.findOne({
+        where: { id },
+      });
+      if (!candidate) {
+        throw new HttpException(
+          'Candidato no encontrado',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      await this.candidatesRepository.update(id, candidateData);
+      const updatedCandidate = await this.candidatesRepository.findOne({
+        where: { id },
+      });
+      if (!updatedCandidate) {
+        throw new HttpException(
+          'Error al obtener candidato actualizado',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+      return updatedCandidate;
+    } catch (e) {
+      console.error('Error in update:', e);
+      throw new HttpException(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        `Error al actualizar el candidato: ${e.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

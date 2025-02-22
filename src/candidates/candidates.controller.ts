@@ -8,6 +8,9 @@ import {
   HttpException,
   HttpStatus,
   ValidationPipe,
+  Delete,
+  Param,
+  Put,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as xlsx from 'xlsx';
@@ -28,7 +31,7 @@ export class CandidatesController {
   ): Promise<Candidate> {
     try {
       console.log('File received:', file);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
       if (!file || !file.buffer) {
         throw new HttpException(
           'Archivo inválido o faltante',
@@ -36,10 +39,8 @@ export class CandidatesController {
         );
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       console.log('File buffer:', file.buffer);
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const workbook = xlsx.read(file.buffer);
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
       const excelData = xlsx.utils.sheet_to_json(sheet)[0] as ExcelData;
@@ -47,6 +48,20 @@ export class CandidatesController {
       console.log('Form data:', formData);
       console.log('Excel data:', excelData);
 
+      // Asegúrate de que los datos del Excel sean válidos
+      if (
+        !excelData ||
+        !excelData.seniority ||
+        !excelData.years ||
+        excelData.availability === undefined
+      ) {
+        throw new HttpException(
+          'Datos del Excel inválidos o faltantes',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      // Llamar al método create del servicio con los dos parámetros
       return this.candidatesService.create(formData, excelData);
     } catch (e) {
       console.error('Error in controller:', e);
@@ -60,5 +75,18 @@ export class CandidatesController {
   @Get()
   async findAll(): Promise<Candidate[]> {
     return this.candidatesService.findAll();
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: number): Promise<void> {
+    return this.candidatesService.remove(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() candidateData: Partial<Candidate>,
+  ): Promise<Candidate> {
+    return this.candidatesService.update(id, candidateData);
   }
 }
