@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Candidate {
@@ -19,4 +19,10 @@ export class Candidate {
 
   @Column()
   availability: boolean;
+
+  @CreateDateColumn() 
+  createdAt: Date;
+
+  @UpdateDateColumn() 
+  updatedAt: Date;
 }
