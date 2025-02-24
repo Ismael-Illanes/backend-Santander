@@ -84,6 +84,18 @@ Check out a few resources that may come in handy when working with NestJS:
 - To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
 - Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
 
+Add this # **Configuration for a PostgreSQL database.**
+#
+
+# Database Configuration **PostgreSQL**
+
+DB_HOST=localhost # Hostname of the PostgreSQL database server (default: localhost if local)
+DB_PORT=5432    # Port of the PostgreSQL database server (default: 5432 for PostgreSQL)
+DB_USER=db_user     # Username for the PostgreSQL database connection
+DB_PASSWORD=db_password # Password for the PostgreSQL database connection
+DB_NAME=database_name # Name of the PostgreSQL database to use
+  
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
