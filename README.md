@@ -90,9 +90,13 @@ Add this # **Configuration for a PostgreSQL database.**
 # Database Configuration **PostgreSQL**
 
 DB_HOST=localhost # Hostname of the PostgreSQL database server (default: localhost if local)
+
 DB_PORT=5432    # Port of the PostgreSQL database server (default: 5432 for PostgreSQL)
+
 DB_USER=db_user     # Username for the PostgreSQL database connection
+
 DB_PASSWORD=db_password # Password for the PostgreSQL database connection
+
 DB_NAME=database_name # Name of the PostgreSQL database to use
   
 
